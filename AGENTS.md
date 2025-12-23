@@ -213,6 +213,18 @@ Civitai's `modelVersion.id`.
 
 ---
 
+## Frontend Technology Constraints
+
+The frontend implementation MUST follow these constraints:
+
+- The frontend MUST be implemented using React.
+- UI components MUST use MUI (Material UI v5).
+- Styling MUST rely on Emotion, as used by MUI.
+- Do NOT introduce alternative UI frameworks (e.g. Chakra, AntD, custom CSS frameworks).
+- JupyterLab UI components may be used where appropriate, but MUI is the primary UI toolkit.
+
+---
+
 ## Explicitly Forbidden
 
 The following are NOT allowed:

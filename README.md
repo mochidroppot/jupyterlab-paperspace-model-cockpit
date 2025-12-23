@@ -100,6 +100,21 @@ Paperspace 環境では「壊れないこと」「再構築できること」を
 
 ---
 
+## 技術スタック
+
+本拡張機能のフロントエンド UI は、以下の技術スタックを前提としています。
+
+- React 18
+- MUI (Material UI v5)
+- Emotion (MUI styling engine)
+- JupyterLab 4.x Extension API
+- Lumino Widget + React integration
+
+UI 実装では、JupyterLab 標準の UI コンポーネントと併用しつつ、
+基本的なレイアウト・操作部品には MUI を使用します。
+
+---
+
 ## ステータス
 
 このプロジェクトは現在開発中です。  
