@@ -78,6 +78,8 @@ def _get_auto_install_model_ids(config: Dict[str, Any]) -> List[str]:
         if not isinstance(bundle, dict):
             LOGGER.warning("Bundle '%s' is not an object", bundle_id)
             continue
+        if bundle.get("enabled", True) is False:
+            continue
         if not bundle.get("auto_install", False):
             continue
 
@@ -98,6 +100,10 @@ def _get_auto_install_model_ids(config: Dict[str, Any]) -> List[str]:
 
 
 def _resolve_model_path(root_dir: Path, model_path: str) -> Path:
+    """
+    Paths are resolved relative to the Jupyter server root.
+    models.json does not support per-engine or per-model base directories.
+    """
     path = Path(model_path)
     if path.is_absolute():
         return path
@@ -111,6 +117,12 @@ def _download_model(model_id: str, model: Dict[str, Any], target_path: Path) -> 
     - On any exception, caller deletes the file
     - No resume, no partial reuse
     - File existence == installed
+    Expected behavior:
+    - For civitai:
+      - Use model['source']['model_id'] and ['version_id']
+    - For huggingface:
+      - Use repo_id, filename, revision
+    - Authentication, rate limiting, retries are out of scope
     """
     LOGGER.info(
         "Download stub: would fetch model '%s' to %s", model_id, target_path
@@ -141,7 +153,15 @@ def _validate_models_section(models: Any) -> None:
         if not isinstance(model, dict):
             raise ValueError(f"model '{model_id}' must be an object")
 
-        allowed_keys = {"display_name", "version", "type", "source", "path"}
+        allowed_keys = {
+            "display_name",
+            "version",
+            "type",
+            "source",
+            "path",
+            "sha256",
+            "size_bytes",
+        }
         _validate_allowed_keys(model, allowed_keys, f"model '{model_id}'")
 
         _require_str(model, "display_name", model_id)
@@ -149,6 +169,11 @@ def _validate_models_section(models: Any) -> None:
         _require_str(model, "type", model_id)
         _require_str(model, "path", model_id)
         _require_mapping(model, "source", model_id)
+
+        if "sha256" in model:
+            _require_str(model, "sha256", model_id)
+        if "size_bytes" in model:
+            _require_int(model, "size_bytes", model_id)
 
         _validate_source(model["source"], model_id)
 
@@ -186,12 +211,14 @@ def _validate_bundles_section(bundles: Any) -> None:
         if not isinstance(bundle, dict):
             raise ValueError(f"bundle '{bundle_id}' must be an object")
 
-        allowed_keys = {"description", "models", "auto_install"}
+        allowed_keys = {"description", "models", "auto_install", "enabled"}
         _validate_allowed_keys(bundle, allowed_keys, f"bundle '{bundle_id}'")
 
         _require_str(bundle, "description", bundle_id)
         _require_bool(bundle, "auto_install", bundle_id)
         _require_list_of_str(bundle, "models", bundle_id)
+        if "enabled" in bundle:
+            _require_bool(bundle, "enabled", bundle_id)
 
 
 def _validate_allowed_keys(obj: Mapping[str, Any], allowed: Sequence[str], label: str) -> None:
