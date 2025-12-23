@@ -1,0 +1,22 @@
+{
+  "models": {
+    "sdxl_base_1_0_128713": {
+      "display_name": "SDXL Base",
+      "version": "1.0",
+      "type": "checkpoint",
+      "source": {
+        "kind": "civitai",
+        "model_id": 12345,
+        "version_id": 128713
+      },
+      "path": "checkpoints/sdxl_base_1_0.safetensors"
+    }
+  },
+  "bundles": {
+    "sdxl_basic": {
+      "description": "Basic SDXL setup",
+      "models": ["sdxl_base_1_0_128713"],
+      "auto_install": true
+    }
+  }
+}
