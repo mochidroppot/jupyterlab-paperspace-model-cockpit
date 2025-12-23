@@ -1,0 +1,38 @@
+{
+  "name": "jupyterlab-paperspace-model-cockpit",
+  "version": "0.0.1",
+  "description": "Declarative model install cockpit for Paperspace JupyterLab",
+  "keywords": [
+    "jupyterlab",
+    "paperspace",
+    "models"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf lib"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@jupyterlab/application": "^4.0.0",
+    "@jupyterlab/apputils": "^4.0.0",
+    "@jupyterlab/launcher": "^4.0.0",
+    "@mui/material": "^5.15.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.0",
+    "typescript": "^5.2.2"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "jupyterlab_paperspace_model_cockpit/labextension"
+  }
+}

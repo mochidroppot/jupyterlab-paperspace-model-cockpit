@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jupyterlab-paperspace-model-cockpit"
+version = "0.0.1"
+description = "Declarative model install cockpit for Paperspace JupyterLab"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+keywords = ["jupyterlab", "paperspace", "models"]
+classifiers = [
+  "Framework :: Jupyter",
+  "Framework :: Jupyter :: JupyterLab",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License"
+]
+dependencies = [
+  "jupyterlab>=4.0.0",
+  "jupyter_server>=2.0.0"
+]
+
+[project.entry-points."jupyter_server.extension"]
+jupyterlab_paperspace_model_cockpit = "jupyterlab_paperspace_model_cockpit.server"
+
+[tool.hatch.build.targets.wheel]
+packages = ["jupyterlab_paperspace_model_cockpit"]
+
+[tool.jupyterlab]
+extension = true
+output_dir = "jupyterlab_paperspace_model_cockpit/labextension"
