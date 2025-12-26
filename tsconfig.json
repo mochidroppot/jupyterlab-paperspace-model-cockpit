@@ -1,18 +1,22 @@
 {
   "compilerOptions": {
     "target": "ES2018",
-    "module": "ES2020",
-    "lib": ["ES2018", "DOM"],
+    "module": "commonjs",
+    "lib": ["DOM", "ESNext", "ES2020.Intl"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "lib",
-    "rootDir": "src",
-    "moduleResolution": "Node",
-    "jsx": "react-jsx",
     "strict": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "jsx": "react",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "types": ["react"],
+    "rootDir": "src",
+    "outDir": "lib"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
 }

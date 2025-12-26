@@ -14,8 +14,21 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "clean": "rimraf lib"
+    "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
+    "build:lib": "tsc",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "install:extension": "jupyter labextension develop --overwrite .",
+    "clean": "jlpm run clean:lib",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:labextension": "rimraf jupyterlab_paperspace_model_cockpit/labextension",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+    "eslint": "eslint . --ext .ts,.tsx --fix",
+    "lint": "jlpm run prettier && jlpm run eslint",
+    "watch": "run-p watch:src watch:labextension",
+    "watch:src": "tsc -w",
+    "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -30,11 +43,33 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
+    "@jupyterlab/builder": "^4.0.0",
+    "@types/react": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^5.0.0",
     "typescript": "^5.2.2"
   },
+  "sideEffects": [
+    "*.css",
+    "@mui/material/**/*",
+    "@mui/icons-material/**/*"
+  ],
   "jupyterlab": {
     "extension": true,
-    "outputDir": "jupyterlab_paperspace_model_cockpit/labextension"
+    "outputDir": "jupyterlab_paperspace_model_cockpit/labextension",
+    "sharedPackages": {
+      "react": {
+        "bundled": false,
+        "singleton": true
+      },
+      "react-dom": {
+        "bundled": false,
+        "singleton": true
+      }
+    }
   }
 }

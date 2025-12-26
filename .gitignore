@@ -1,0 +1,37 @@
+# Python environment
+.python-version
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Python build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+
+# Node.js build artifacts
+node_modules/
+.yarn/
+
+# Jupyter Lab extension build artifacts
+labextension/
+/lib/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+.vscode/
+.DS_Store
+
+# Environment variables
+.env
+
+# Build artifacts
+dist/
+
+# Editorconfig
+.editorconfig

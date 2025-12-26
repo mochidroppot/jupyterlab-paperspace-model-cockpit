@@ -1,0 +1,15 @@
+{
+    "packageManager": "python",
+    "packageName": "jupyterlab-paperspace-model-cockpit",
+    "uninstall": [
+      {
+        "src": "share/jupyter/labextensions/jupyterlab-paperspace-model-cockpit",
+        "dest": "jupyterlab-paperspace-model-cockpit"
+      },
+      {
+        "src": "etc/jupyter/jupyter_server_config.d/jupyterlab_paperspace_model_cockpit.json",
+        "dest": "jupyterlab_paperspace_model_cockpit.json"
+      }
+    ]
+  }
+  

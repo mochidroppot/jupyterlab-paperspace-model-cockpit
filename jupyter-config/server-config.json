@@ -1,0 +1,7 @@
+{
+  "ServerApp": {
+    "jpserver_extensions": {
+      "jupyterlab_paperspace_model_cockpit": true
+    }
+  }
+}

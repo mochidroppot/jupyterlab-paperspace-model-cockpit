@@ -1,32 +1,71 @@
 [build-system]
-requires = ["hatchling>=1.18"]
+requires = ["hatchling>=1.5.0", "jupyterlab>=4.0.0,<5", "hatch-nodejs-version"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jupyterlab-paperspace-model-cockpit"
-version = "0.0.1"
-description = "Declarative model install cockpit for Paperspace JupyterLab"
+name = "jupyterlab_paperspace_model_cockpit"
 readme = "README.md"
-requires-python = ">=3.9"
 license = { file = "LICENSE" }
-keywords = ["jupyterlab", "paperspace", "models"]
+requires-python = ">=3.11"
 classifiers = [
-  "Framework :: Jupyter",
-  "Framework :: Jupyter :: JupyterLab",
-  "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License"
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 4",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-  "jupyterlab>=4.0.0",
-  "jupyter_server>=2.0.0"
+    "jupyter_server>=2.0.1,<3",
+    "jupyterlab>=4.0.0,<5",
+    "python-dotenv>=1.0.0",
+]
+dynamic = ["version", "description", "authors", "urls", "keywords"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
 ]
 
 [project.entry-points."jupyter_server.extension"]
-jupyterlab_paperspace_model_cockpit = "jupyterlab_paperspace_model_cockpit.server"
+jupyterlab-paperspace-model-cockpit = "jupyterlab_paperspace_model_cockpit"
 
-[tool.hatch.build.targets.wheel]
-packages = ["jupyterlab_paperspace_model_cockpit"]
+[project.entry-points."jupyterlab.extension"]
+jupyterlab-paperspace-model-cockpit = "jupyterlab_paperspace_model_cockpit"
 
-[tool.jupyterlab]
-extension = true
-output_dir = "jupyterlab_paperspace_model_cockpit/labextension"
+[tool.hatch.version]
+source = "nodejs"
+
+[tool.hatch.metadata.hooks.nodejs]
+fields = ["description", "authors", "urls", "keywords"]
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["jupyterlab_paperspace_model_cockpit/labextension"]
+exclude = [".github", "binder"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"jupyterlab_paperspace_model_cockpit/labextension" = "share/jupyter/labextensions/jupyterlab-paperspace-model-cockpit"
+"install.json" = "share/jupyter/labextensions/jupyterlab-paperspace-model-cockpit/install.json"
+"jupyter-config/server-config.json" = "etc/jupyter/jupyter_server_config.d/jupyterlab_paperspace_model_cockpit.json"
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "jupyterlab_paperspace_model_cockpit/labextension/package.json",
+]
+skip-if-exists = ["jupyterlab_paperspace_model_cockpit/labextension/package.json"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+npm = ["jlpm"]
+
+[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_cmd = "build"
+npm = ["jlpm"]
+source_dir = "src"
+build_dir = "jupyterlab_paperspace_model_cockpit/labextension"

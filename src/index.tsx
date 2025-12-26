@@ -87,8 +87,8 @@ class CockpitWidget extends ReactWidget {
 const plugin: JupyterFrontEndPlugin<void> = {
   id: PLUGIN_ID,
   autoStart: true,
-  optional: [ILauncher],
-  activate: (app: JupyterFrontEnd, launcher: ILauncher | null) => {
+  requires: [ILauncher],
+  activate: (app: JupyterFrontEnd, launcher: ILauncher) => {
     const { commands, shell } = app;
 
     commands.addCommand(COMMAND_ID, {
@@ -102,12 +102,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
       }
     });
 
-    if (launcher) {
-      launcher.add({
-        command: COMMAND_ID,
-        category: 'Paperspace'
-      });
-    }
+    launcher.add({
+      command: COMMAND_ID,
+      category: 'Paperspace',
+      rank: 1
+    });
   }
 };
 
