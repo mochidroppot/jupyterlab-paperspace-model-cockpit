@@ -22,10 +22,12 @@
     "@emotion/styled": "^11.11.0",
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
+    "@jupyterlab/coreutils": "^4.0.0",
     "@jupyterlab/launcher": "^4.0.0",
     "@mui/material": "^5.15.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "rimraf": "^5.0.0",

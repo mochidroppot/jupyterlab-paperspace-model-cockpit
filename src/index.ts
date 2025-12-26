@@ -2,8 +2,20 @@ import React from 'react';
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { ILauncher } from '@jupyterlab/launcher';
 import { ReactWidget } from '@jupyterlab/apputils';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { PageConfig } from '@jupyterlab/coreutils';
+import {
+  Alert,
+  Box,
+  Chip,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+  Typography
+} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import useSWR from 'swr';
 
 const PLUGIN_ID = 'jupyterlab-paperspace-model-cockpit:plugin';
 const COMMAND_ID = 'paperspace-model-cockpit:open';
@@ -16,6 +28,17 @@ class CockpitWidget extends ReactWidget {
 
   render(): JSX.Element {
     const theme = createTheme();
+    const baseUrl = PageConfig.getBaseUrl();
+    const endpoint = `${baseUrl}paperspace-model-cockpit/api/models`;
+    const fetcher = (url: string) =>
+      fetch(url, { credentials: 'same-origin' }).then(res => {
+        if (!res.ok) {
+          throw new Error(`Request failed: ${res.status}`);
+        }
+        return res.json();
+      });
+    const { data, error, isLoading } = useSWR(endpoint, fetcher);
+    const models = Array.isArray(data?.models) ? data.models : [];
 
     return (
       <ThemeProvider theme={theme}>
@@ -23,11 +46,37 @@ class CockpitWidget extends ReactWidget {
           <Stack spacing={2}>
             <Typography variant="h5">Paperspace Model Cockpit</Typography>
             <Typography variant="body2">
-              UI placeholder. Server handles models.json and auto-install checks on startup.
+              models.json based model list. Auto-install happens on server start.
             </Typography>
-            <Button variant="contained" disabled>
-              Install Selected (stub)
-            </Button>
+            {isLoading && (
+              <Stack direction="row" spacing={1} alignItems="center">
+                <CircularProgress size={18} />
+                <Typography variant="body2">Loading models...</Typography>
+              </Stack>
+            )}
+            {error && <Alert severity="error">Failed to load models list.</Alert>}
+            {!isLoading && !error && (
+              <List dense>
+                {models.length === 0 && (
+                  <ListItem>
+                    <ListItemText primary="No models defined in models.json." />
+                  </ListItem>
+                )}
+                {models.map((model: any) => (
+                  <ListItem key={model.id} divider>
+                    <ListItemText
+                      primary={`${model.display_name ?? model.id} (${model.version ?? '-'})`}
+                      secondary={model.path ?? ''}
+                    />
+                    <Chip
+                      label={model.installed ? 'installed' : 'not installed'}
+                      color={model.installed ? 'success' : 'default'}
+                      size="small"
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            )}
           </Stack>
         </Box>
       </ThemeProvider>
